@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Head from "next/head";
 
+// Function to fetch product data
 async function singleProduct(id) {
   const res = await fetch(`https://dummyjson.com/products/${id}`);
   if (!res.ok) {
@@ -9,26 +9,34 @@ async function singleProduct(id) {
   return res.json();
 }
 
+// Dynamic metadata
+export async function generateMetadata({ params }) {
+  const data = await singleProduct(params.id);
+
+  return {
+    title: data.title,
+    description: data.description,
+    openGraph: {
+      title: data.title,
+      description: data.description,
+      images: [
+        {
+          url: data.images[0],
+          width: 800,
+          height: 600,
+          alt: data.title,
+        },
+      ],
+    },
+  };
+}
+
+// Page component
 const Page = async ({ params }) => {
   const data = await singleProduct(params.id);
   
   return (
     <div>
-      {/* Override Global SEO and Open Graph Meta Tags */}
-      <Head>
-        <title>{data.title} | YourSiteName</title>
-        <meta name="description" content={data.description} />
-        <meta property="og:title" content={data.title} />
-        <meta property="og:description" content={data.description} />
-        <meta property="og:image" content={data.images[0]} />
-        <meta property="og:url" content={`https://yourdomain.com/products/${data.id}`} />
-        <meta property="og:type" content="product" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={data.title} />
-        <meta name="twitter:description" content={data.description} />
-        <meta name="twitter:image" content={data.images[0]} />
-      </Head>
-
       {/* Product Details */}
       <div key={data.id}>
         <h4>{data.title}</h4>
