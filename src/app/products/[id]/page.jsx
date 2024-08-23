@@ -14,7 +14,7 @@ const Page = async ({ params }) => {
   
   return (
     <div>
-      {/* SEO and Open Graph Meta Tags */}
+      {/* Override Global SEO and Open Graph Meta Tags */}
       <Head>
         <title>{data.title} | YourSiteName</title>
         <meta name="description" content={data.description} />
